@@ -1,8 +1,13 @@
 FROM node:8.6-alpine
 # update and upgrade packages
 RUN apk update && apk upgrade && apk add --update alpine-sdk
+
+# Install GIT
+RUN apk add --no-cache bash git openssh
+
 # Install Python
 RUN apk add python py-pip
+
 # Install AWS CLI
 RUN pip install awscli --user --upgrade
 # Tidy up
