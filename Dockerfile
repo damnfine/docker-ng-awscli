@@ -22,8 +22,13 @@ ENV PATH "$PATH:~/.local/bin"
 RUN yarn global add @angular/cli@1.4.4 \
   && ng set --global packageManager=yarn
 
+ENV CHROMIUM_VERSION=61.0 \
+  CHROME_PATH=/usr/bin/chromium-browser \
+  CHROME_BIN=/usr/bin/chromium-browser
+
 # Install Chromium
-RUN apk add --no-cache chromium
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+	"chromium>${CHROMIUM_VERSION}"
 
 # Tidy up
 RUN apk del alpine-sdk \
