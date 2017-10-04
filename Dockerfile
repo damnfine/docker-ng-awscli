@@ -1,18 +1,20 @@
-FROM node:8.6
+FROM node:8.6-alpine
 # update and upgrade packages
-RUN apt-get update -yq && apt-get upgrade -yq
+RUN apk update && apk upgrade && apk add --update alpine-sdk
 
 # Install GIT
-RUN apt-get install -yq bash git openssh-server
+RUN apk add --no-cache bash git openssh
 
 # Install Python
-RUN apt-get install -yq python-pip python-dev build-essential
+RUN apk add python py-pip
 
 # Install AWS CLI
-RUN pip install --upgrade pip
 RUN pip install awscli --user --upgrade
 # Tidy up
-# TODO
+RUN apk del py-pip \
+    && apk del py-setuptools \
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/*
 # Add CLI to PATH
 ENV PATH "$PATH:~/.local/bin"
 
@@ -20,16 +22,16 @@ ENV PATH "$PATH:~/.local/bin"
 RUN yarn global add @angular/cli@1.4.4 \
   && ng set --global packageManager=yarn
 
-ENV CHROME_PATH=/usr/bin/chromium-browser \
+ENV CHROMIUM_VERSION=61.0 \
+  CHROME_PATH=/usr/bin/chromium-browser \
   CHROME_BIN=/usr/bin/chromium-browser
 
-# Install Chromium and dependencies
-RUN \
-  apt-get install -yq chromium gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
-  libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
-  libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
-  libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
-  ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+# Install Chromium
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+	"chromium>${CHROMIUM_VERSION}"
 
 # Tidy up
-# TODO
+RUN apk del alpine-sdk \
+  && rm -rf /tmp/* /var/cache/apk/* *.tar.gz ~/.npm \
+  && npm cache verify \
+  && sed -i -e "s/bin\/ash/bin\/sh/" /etc/passwd
