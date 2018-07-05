@@ -1,4 +1,4 @@
-FROM node:8.6
+FROM node:8.11
 # update and upgrade packages
 RUN apt-get update -yq && apt-get upgrade -yq
 
