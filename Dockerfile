@@ -17,7 +17,7 @@ RUN pip install awscli --user --upgrade
 ENV PATH "$PATH:~/.local/bin"
 
 # Install Angular CLI
-RUN yarn global add @angular/cli@6.0.7 \
+RUN yarn global add @angular/cli@6.1.1 \
   && ng set --global packageManager=yarn
 
 ENV CHROME_PATH=/usr/bin/chromium-browser \
