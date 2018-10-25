@@ -1,4 +1,4 @@
-FROM node:8.11
+FROM node:10.12
 # update and upgrade packages
 RUN apt-get update -yq && apt-get upgrade -yq
 
@@ -17,7 +17,7 @@ RUN pip install awscli --user --upgrade
 ENV PATH "$PATH:~/.local/bin"
 
 # Install Angular CLI
-RUN yarn global add @angular/cli@6.1.1 \
+RUN yarn global add @angular/cli@7.0.3 \
   && ng set --global packageManager=yarn
 
 ENV CHROME_PATH=/usr/bin/chromium-browser \
